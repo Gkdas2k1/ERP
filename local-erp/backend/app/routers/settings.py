@@ -1,9 +1,8 @@
-# backend/app/routers/settings.py
 from fastapi import APIRouter, Depends, UploadFile, File
 from sqlmodel import Session, select
 from typing import Optional
 from ..database import get_session
-from ..models.settings import CompanySettings
+from ..models.settings import CompanySettings, CompanySettingsCreate
 from ..dependencies import require_role
 from ..core.config import UPLOAD_DIR
 import shutil
@@ -16,16 +15,18 @@ def get_settings(session: Session = Depends(get_session)):
 
 @router.post("/", response_model=CompanySettings)
 def update_settings(
-    settings_data: CompanySettings, 
+    settings_data: CompanySettingsCreate,  # <--- CHANGED: Now uses the clean Pydantic model
     session: Session = Depends(get_session),
     current_user=Depends(require_role("admin"))
 ):
     settings = session.exec(select(CompanySettings)).first()
+    
     if not settings:
-        settings = settings_data
+        # If no settings exist yet, create a new row in the database
+        settings = CompanySettings(**settings_data.model_dump())
         session.add(settings)
     else:
-        # Pydantic V2 uses model_dump()
+        # If settings exist, update only the fields that were sent
         for key, value in settings_data.model_dump(exclude_unset=True).items():
             setattr(settings, key, value)
             
@@ -46,7 +47,6 @@ def upload_logo(
     
     url = f"/static/uploads/logo_{file.filename}"
     
-    # Update DB with new path
     settings = session.exec(select(CompanySettings)).first()
     if settings:
         settings.logo_path = url

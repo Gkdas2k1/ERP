@@ -1,0 +1,7 @@
+{
+  "name": "local-erp",
+  "private": true,
+  "scripts": {
+    "backend": "cd backend && venv\\Scripts\\python -m uvicorn app.main:app --reload --port 8000"
+  }
+}
