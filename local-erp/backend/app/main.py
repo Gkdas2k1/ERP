@@ -1,6 +1,6 @@
-# backend/app/main.py
 from fastapi import FastAPI, Depends
 from fastapi.staticfiles import StaticFiles
+from fastapi.middleware.cors import CORSMiddleware  # <-- ADD THIS
 from sqlmodel import Session
 from contextlib import asynccontextmanager
 from pathlib import Path
@@ -19,12 +19,27 @@ app = FastAPI(
     lifespan=lifespan
 )
 
-# 1. Mount static files for logos/watermarks
+# --- ADD CORS MIDDLEWARE ---
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=[
+        "http://localhost:5173",  # Vite dev server
+        "http://127.0.0.1:5173",
+        "http://localhost:1420",  # Tauri dev server
+        "http://127.0.0.1:1420",
+    ],
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
+# --- END CORS ---
+
+# Mount static files for logos/watermarks
 STATIC_DIR = Path(__file__).resolve().parent / "static"
 STATIC_DIR.mkdir(parents=True, exist_ok=True)
 app.mount("/static", StaticFiles(directory=str(STATIC_DIR)), name="static")
 
-# 2. Include Routers
+# Include Routers
 app.include_router(auth.router)
 app.include_router(settings.router)
 
