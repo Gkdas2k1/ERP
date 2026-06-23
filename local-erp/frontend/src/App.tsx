@@ -6,6 +6,8 @@ import Layout from './components/Layout';
 import LoginPage from './pages/LoginPage';
 import Dashboard from './pages/Dashboard';
 import Settings from './pages/Settings';
+import Inventory from './pages/Inventory';
+import Sales from './pages/Sales';
 
 // Placeholder components for pages we will build in Phase 4
 const Placeholder = ({ title }: { title: string }) => (
@@ -27,7 +29,8 @@ function App() {
           <Route path="/" element={<ProtectedRoute><Layout /></ProtectedRoute>}>
             <Route index element={<Navigate to="/dashboard" replace />} />
             <Route path="dashboard" element={<Dashboard />} />
-            <Route path="sales" element={<Placeholder title="Sales & Invoicing" />} />
+            <Route path="sales" element={<Sales />} />
+            <Route path="inventory" element={<Inventory />} />
             <Route path="purchases" element={<Placeholder title="Purchases & Procurement" />} />
             <Route path="inventory" element={<Placeholder title="Inventory & Warehousing" />} />
             <Route path="accounting" element={<Placeholder title="Accounting & Auditing" />} />
