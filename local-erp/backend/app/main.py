@@ -50,9 +50,9 @@ app.include_router(inventory.router) # <-- Add this
 app.include_router(sales.router)      # <-- Add this
 app.include_router(accounting.router) # <-- Add this
 app.include_router(analytics.router)  # <-- Add this
-@app.get("/")
-def read_root():
-    return {"message": "Local ERP Backend is running securely."}
+#@app.get("/")
+#def read_root():
+#    return {"message": "Local ERP Backend is running securely."}
 
 @app.get("/api/health")
 def health_check(session: Session = Depends(get_session)):
