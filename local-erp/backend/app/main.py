@@ -2,6 +2,8 @@ from fastapi import FastAPI, Depends
 from fastapi.staticfiles import StaticFiles
 from fastapi.middleware.cors import CORSMiddleware  # <-- ADD THIS
 from sqlmodel import Session
+from fastapi.responses import FileResponse
+from fastapi import HTTPException
 from contextlib import asynccontextmanager
 from pathlib import Path
 from .database import create_db_and_tables, get_session
@@ -55,3 +57,23 @@ def read_root():
 @app.get("/api/health")
 def health_check(session: Session = Depends(get_session)):
     return {"status": "healthy", "db_connected": True}
+
+# 1. Mount the React Build as a static directory
+FRONTEND_DIR = Path(__file__).resolve().parent / "static" / "frontend"
+
+if FRONTEND_DIR.exists():
+    app.mount("/assets", StaticFiles(directory=str(FRONTEND_DIR / "assets")), name="assets")
+
+# 2. Catch-all route for React Router (SPA)
+@app.get("/{full_path:path}")
+def serve_spa(full_path: str):
+    # If the path is an API route or static file, let FastAPI handle it naturally
+    if full_path.startswith("api/") or full_path.startswith("static/"):
+        raise HTTPException(status_code=404, detail="Not found")
+        
+    # Otherwise, serve the React index.html
+    index_path = FRONTEND_DIR / "index.html"
+    if index_path.exists():
+        return FileResponse(index_path)
+    
+    return {"message": "Frontend not built yet. Run 'npm run build' in the frontend folder."}
