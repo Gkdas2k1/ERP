@@ -59,7 +59,7 @@ def health_check(session: Session = Depends(get_session)):
     return {"status": "healthy", "db_connected": True}
 
 # 1. Mount the React Build as a static directory
-FRONTEND_DIR = Path(__file__).resolve().parent / "static" / "frontend"
+FRONTEND_DIR = Path(__file__).resolve().parent.parent / "static" / "frontend"
 
 if FRONTEND_DIR.exists():
     app.mount("/assets", StaticFiles(directory=str(FRONTEND_DIR / "assets")), name="assets")
