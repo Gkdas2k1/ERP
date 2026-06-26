@@ -3,14 +3,15 @@ import { AuthProvider } from './context/AuthContext';
 import ProtectedRoute from './components/ProtectedRoute';
 import Layout from './components/Layout';
 
+// Import all pages
 import LoginPage from './pages/LoginPage';
 import Dashboard from './pages/Dashboard';
 import Settings from './pages/Settings';
 import Inventory from './pages/Inventory';
 import Sales from './pages/Sales';
-import Accounting from './pages/Accounting';
+import Accounting from './pages/Accounting'; // <--- IMPORTED
 
-// Placeholder components for pages we will build in Phase 4
+// Placeholder for future modules
 const Placeholder = ({ title }: { title: string }) => (
   <div className="p-6 bg-white rounded-lg shadow">
     <h2 className="text-2xl font-bold text-gray-800">{title}</h2>
@@ -31,11 +32,12 @@ function App() {
             <Route index element={<Navigate to="/dashboard" replace />} />
             <Route path="dashboard" element={<Dashboard />} />
             <Route path="sales" element={<Sales />} />
-            <Route path="inventory" element={<Inventory />} />
             <Route path="purchases" element={<Placeholder title="Purchases & Procurement" />} />
-            <Route path="inventory" element={<Placeholder title="Inventory & Warehousing" />} />
-            <Route path="accounting" element={<Placeholder title="Accounting & Auditing" />} />
-            <Route path="accounting" element={<Accounting />} />
+            <Route path="inventory" element={<Inventory />} />
+            
+            {/* <--- WIRED TO THE ACTUAL COMPONENT NOW */}
+            <Route path="accounting" element={<Accounting />} /> 
+            
             <Route path="settings" element={<Settings />} />
           </Route>
 
