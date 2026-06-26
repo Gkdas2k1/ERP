@@ -8,6 +8,7 @@ import Dashboard from './pages/Dashboard';
 import Settings from './pages/Settings';
 import Inventory from './pages/Inventory';
 import Sales from './pages/Sales';
+import Accounting from './pages/Accounting';
 
 // Placeholder components for pages we will build in Phase 4
 const Placeholder = ({ title }: { title: string }) => (
@@ -34,6 +35,7 @@ function App() {
             <Route path="purchases" element={<Placeholder title="Purchases & Procurement" />} />
             <Route path="inventory" element={<Placeholder title="Inventory & Warehousing" />} />
             <Route path="accounting" element={<Placeholder title="Accounting & Auditing" />} />
+            <Route path="accounting" element={<Accounting />} />
             <Route path="settings" element={<Settings />} />
           </Route>
 

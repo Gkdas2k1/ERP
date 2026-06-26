@@ -7,6 +7,7 @@ from pathlib import Path
 from .database import create_db_and_tables, get_session
 from .routers import auth, settings
 from .routers import auth, settings, inventory, sales
+from .routers import auth, settings, inventory, sales, accounting
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
@@ -45,6 +46,7 @@ app.include_router(auth.router)
 app.include_router(settings.router)
 app.include_router(inventory.router) # <-- Add this
 app.include_router(sales.router)      # <-- Add this
+app.include_router(accounting.router) # <-- Add this
 @app.get("/")
 def read_root():
     return {"message": "Local ERP Backend is running securely."}

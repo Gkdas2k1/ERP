@@ -15,3 +15,8 @@ def create_db_and_tables():
 def get_session():
     with Session(engine) as session:
         yield session
+
+def create_db_and_tables():
+    # ADD 'audit' to the imports
+    from .models import base, auth, settings, inventory, accounting, transactions, audit
+    SQLModel.metadata.create_all(engine)
