@@ -1,15 +1,15 @@
+import { Suspense, lazy } from 'react';
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 import { AuthProvider } from './context/AuthContext';
 import ProtectedRoute from './components/ProtectedRoute';
 import Layout from './components/Layout';
 
-// Import all pages
-import LoginPage from './pages/LoginPage';
-import Dashboard from './pages/Dashboard';
-import Settings from './pages/Settings';
-import Inventory from './pages/Inventory';
-import Sales from './pages/Sales';
-import Accounting from './pages/Accounting'; // <--- IMPORTED
+const LoginPage = lazy(() => import('./pages/LoginPage'));
+const Dashboard = lazy(() => import('./pages/Dashboard'));
+const Settings = lazy(() => import('./pages/Settings'));
+const Inventory = lazy(() => import('./pages/Inventory'));
+const Sales = lazy(() => import('./pages/Sales'));
+const Accounting = lazy(() => import('./pages/Accounting'));
 
 // Placeholder for future modules
 const Placeholder = ({ title }: { title: string }) => (
@@ -19,26 +19,29 @@ const Placeholder = ({ title }: { title: string }) => (
   </div>
 );
 
+const PageLoader = () => (
+  <div className="flex min-h-screen items-center justify-center bg-slate-50">
+    <div className="h-10 w-10 animate-spin rounded-full border-4 border-slate-200 border-t-blue-500" />
+  </div>
+);
+
 function App() {
   return (
     <AuthProvider>
       <BrowserRouter>
         <Routes>
           {/* Public Routes */}
-          <Route path="/login" element={<LoginPage />} />
+          <Route path="/login" element={<Suspense fallback={<PageLoader />}><LoginPage /></Suspense>} />
 
           {/* Protected Routes with Layout */}
           <Route path="/" element={<ProtectedRoute><Layout /></ProtectedRoute>}>
             <Route index element={<Navigate to="/dashboard" replace />} />
-            <Route path="dashboard" element={<Dashboard />} />
-            <Route path="sales" element={<Sales />} />
+            <Route path="dashboard" element={<Suspense fallback={<PageLoader />}><Dashboard /></Suspense>} />
+            <Route path="sales" element={<Suspense fallback={<PageLoader />}><Sales /></Suspense>} />
             <Route path="purchases" element={<Placeholder title="Purchases & Procurement" />} />
-            <Route path="inventory" element={<Inventory />} />
-            
-            {/* <--- WIRED TO THE ACTUAL COMPONENT NOW */}
-            <Route path="accounting" element={<Accounting />} /> 
-            
-            <Route path="settings" element={<Settings />} />
+            <Route path="inventory" element={<Suspense fallback={<PageLoader />}><Inventory /></Suspense>} />
+            <Route path="accounting" element={<Suspense fallback={<PageLoader />}><Accounting /></Suspense>} />
+            <Route path="settings" element={<Suspense fallback={<PageLoader />}><Settings /></Suspense>} />
           </Route>
 
           {/* Fallback */}
